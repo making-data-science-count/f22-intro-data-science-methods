@@ -1,0 +1,30 @@
+---
+title: "Curating a Data Science Resource"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Individual Final Project
+
+### Overview
+
+This assignment involves identifying and describing a data science resource as a part of a class resource throughout the semester.
+
+### Details
+
+While you work on your final project, you are very likely going to be doing some independent research. This independent research may lead you to resources, R packages, or even individuals who you found very helpful. This assignment is an opportunity for you, individually, and us, as a class, to share these resources with each other, students in future classes, and anyone interested!
+
+### Process, Timeline and Due Date, and How to Submit
+
+- By 5/5 (anytime before is fine!), add your resource to the R Markdown document in the repository for this website:
+  https://github.com/making-data-science-count/s21-intro-to-data-sci-methods-in-ed/blob/main/curated-data-science-resources.Rmd
+  - A screencast on this process is here: https://www.screencast.com/t/tkLqZp1kzdM
+
+- To add this, you will need to first create a GitHub account. You can do so here: http://github.com/
+
+- Then, make your edit directly in the document. Review the Week 11 recording for instructions on how to do this (and do not hesitate to reach out with any questions; using GitHub is tricky!)
+
+- Once you've done this, we'll review your "pull request", and you're good to go!

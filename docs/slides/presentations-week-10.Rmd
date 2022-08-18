@@ -1,0 +1,376 @@
+---
+title: "Week 10 - Modeling Data" 
+subtitle: ""
+author: "Joshua Rosenberg and Alex Lishinski"
+date: "March 15, 2021"
+output:
+  xaringan::moon_reader:
+    css: [theme.css]
+    lib_dir: libs
+    nature:
+      highlightStyle: github
+      highlightLines: true
+      countIncrementalSlides: false
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(echo = TRUE, fig.align = "center", message = FALSE)
+```
+
+# Welcome!
+
+Welcome to *week 10*!
+
+```{r echo = FALSE, out.width = "70%"}
+```
+
+**Record the meeting** 
+
+```{r, include = TRUE, echo = FALSE}
+library(here)
+library(tidyverse)
+```
+
+---
+
+# Breakout rooms!
+
+Starting with whoever has the most tidy current work space (home, office) . . . 
+
+- What was most challenging about the last homework (in which you carried out an initial version of a complete analysis)?
+- What was the most rewarding about the last homework?
+
+---
+
+**Record the meeting** 
+
+### Review of last week's class
+
+- From Soup to Nuts: Carrying out a complete analysis
+
+- Exam 2
+
+---
+
+### Homework highlights
+
+```{r echo = FALSE, out.width = "90%"}
+knitr::include_graphics("img/hw9_highlight1.png")
+```
+
+
+---
+
+
+### Homework highlights
+
+```{r echo = FALSE, out.width = "90%"}
+knitr::include_graphics("img/hw9_highlight2.png")
+```
+
+
+---
+
+### Exam recap
+
+* Overall everyone did quite well!
+
+* Many questions 100% correct
+
+* A couple of items to highlight
+
+---
+
+### Exam recap
+
+_A couple of items to highlight_
+
+Which of the following is one use case for the kable package?
+
+* To format tables included in RMarkdown documents and reports, (Correct answer) 56 %	
+* To easily create plots of your data, (Incorrect answer)	6 %	
+* To create a correlation matrix, (Incorrect answer) 6 %	
+* To automatically calculate summary statistics for a data frame, (Incorrect answer) 31 %	
+
+---
+
+### Exam recap
+
+_A couple of items to highlight_
+
+For this question, we use "left data frame" to refer to the first data frame passed to the join function, and "right data frame" to refer to the second data frame passed to the join function.
+
+For example, below, df1 is the left data frame, and df2 is the right data frame.
+
+left_join(df1, df2)
+
+See here (and the slides) for a description of different joins: https://datascienceineducation.com/c07.html#joining-the-data
+
+Which function would you use if you wanted to join the left and right data frame based on a key (a variable present in both data frames), joining those rows in the right data frame to those that match a key in the left data frame, and keeping all of the rows in the left data frame?
+
+* anti_join() 0%
+* left_join() (Correct answer) 63%
+* right_join() 13%
+* semi_join() 25%
+
+---
+
+### Exam recap
+
+_A couple of items to highlight_
+
+Which of the following have we not considered to be a data visualization layer?
+
+* mapping between data and geometric object 0%
+* theme 0%
+* data 38%
+* geometric object 13%
+* title (correct answer) 50%
+
+---
+
+### Mid-semester feedback 
+
+*Thanks everyone who took the time to give feedback!*
+
+_What should we keep doing?_
+
+* Homeworks
+* In class demos
+
+---
+
+### Mid-semester feedback 
+
+*Thanks everyone who took the time to give feedback!*
+
+_What should we do more of?_
+
+* Opportunities to try things in class
+* Better explanation in HW
+
+---
+
+### Mid-semester feedback 
+
+*Thanks everyone who took the time to give feedback!*
+
+_What should we do less?_
+
+* Base groups (not that much time)
+* Showing too much stuff in demos (in too short time)
+* Live coding Base R vs homework (Rstudio)
+
+---
+
+### Mid-semester feedback 
+
+*Thanks everyone who took the time to give feedback!*
+
+_Other comments?_
+
+* More frequent quizzes/checks
+* Ability to use different data sets
+
+---
+
+### This week's topics
+
+**Overview**
+
+A. Final project presentations
+
+B. A buffet of models
+
+---
+
+### A. Final project presentations
+
+* Thank you for adding your ideas to the final project brainstorm! 
+
+  * https://docs.google.com/presentation/u/3/d/1KWU5bhxZmV63vkNtQNxHo-2YI_iYJmSW2oOZ_jtFeP0/edit#slide=id.p
+
+* Today, each of you will briefly (1 min. or less) present on your final project idea
+
+* We will each provide feedback via Jamboard
+  * https://jamboard.google.com/d/1S6K3ED_jvCS5b-GP3wfk5S3o6g4Buj0wgq6fTlmUY2w/edit?usp=sharing
+
+---
+
+### B. A buffet of models
+
+There are a number of ways to understand variables about which you have data and the
+relationships between them.
+
+One way is to create a **model**, a simplified _representation_ of your data that
+can be informative to you (and others) about your data - and, maybe, what your data
+represents. 
+
+From this broad definition, models can take many different forms:
+
+- A sample statistic (e.g., a _mean_ of a variable)
+- A relationship describing how two variables co-vary (e.g., a bivariate _correlation_)
+- A linear regression model
+- . . . (what models are common in your field?)
+
+---
+
+### B. A buffet of models
+
+One of the benefits of modeling your data within R is that many R packages share a 
+common modeling syntax, or interface: the formula syntax.
+
+This code represents the regression of `hp` upon `mpg`:
+
+```{r, eval = FALSE}
+mpg ~ hp
+```
+
+This code often corresponds to the underlying mathematical/statistical equation:
+
+```{r, echo = FALSE}
+m1 <- lm(mpg ~ hp, data = mtcars)
+equatiomatic::extract_eq(m1)
+```
+
+---
+
+### B. A buffet of models
+
+Today, we'll focus on the linear regression model, but will also touch on the following:
+
+- *t*-test
+- ANOVA
+- generalized linear model (i.e., Poisson or Logistic Regression)
+- multi-level (or hierarchical linear) model
+
+---
+
+### B. A buffet of models
+
+There is a _lot_ we can do with a linear regression model!
+
+```{r, warning = FALSE, message = FALSE}
+d <- read_csv("https://raw.githubusercontent.com/data-edu/dataedu/master/data-raw/wt01_online-science-motivation/processed/sci_mo_processed.csv")
+
+d
+```
+
+---
+
+### B. A buffet of models
+
+Estimating a model; seeing the result:
+
+```{r, warning = FALSE, message = FALSE}
+lm(FinalGradeCEMS ~ TimeSpent_hours, data = d)
+```
+---
+
+### B. A buffet of models
+
+Saving the output to an _object_ and printing a summary of the results
+
+```{r, warning = FALSE, message = FALSE}
+m1 <- lm(FinalGradeCEMS ~ TimeSpent_hours, data = d)
+summary(m1)
+```
+
+---
+
+### B. A buffet of models
+
+Making the model more complex - a multiple regression
+
+```{r, warning = FALSE, message = FALSE}
+m2 <- lm(FinalGradeCEMS ~ TimeSpent_hours + int + Gender, data = d)
+summary(m2)
+```
+
+---
+
+### B. A buffet of models
+
+Adding an interaction 
+
+```{r, warning = FALSE, message = FALSE}
+m3 <- lm(FinalGradeCEMS ~ TimeSpent_hours + int*Gender, data = d)
+summary(m3)
+```
+
+---
+
+### B. A buffet of models
+
+*t*-test
+
+```{r}
+m_t_test <- t.test(FinalGradeCEMS ~ Gender, data = d)
+m_t_test
+```
+
+---
+
+### B. A buffet of models
+
+ANOVA
+
+```{r}
+m_anova <- aov(FinalGradeCEMS ~ subject, data = d)
+m_anova
+```
+
+---
+
+### B. A buffet of models
+
+Multi-level model
+
+```{r}
+library(lme4)
+m5 <- lmer(FinalGradeCEMS ~ TimeSpent_hours + int*Gender + (1|course_id), data = d)
+summary(m5)
+```
+
+---
+
+### Live coding
+
+Let's head over to the following file for a demonstration: `week-10-demo.R`
+
+---
+
+# Logistics
+
+**This week**
+
+* Homework 10: Available tomorrow by noon tomorrow; **Due by Thursday, 4/1**
+
+* Readings:
+  * https://datascienceineducation.com/c09.html
+  * https://moderndive.com/5-regression.html
+---
+
+# Final Project
+
+* [Final project](https://making-data-science-count.github.io/s21-intro-to-data-sci-methods-in-ed/assignments-final-projects.html)
+  * Flesh out final project idea based upon feedback (this forthcoming week)
+    * Then receive feedback from us (the following week)
+
+---
+
+### Random
+
+* Do you have an interest in a class on social network analysis (more of a general theoretical and methodological approach that can be brought to bear on the analysis of face-to-face and digital networks) and the analysis of social media data? If so, please let us know.
+
+* Are you interested in a graduate-level certificate in educational data science? 
+  * https://docs.google.com/document/d/e/2PACX-1vRhJTuCQfpEx9uZl57pucjyr_quIR9Vv5ZZdxvu4GSrdD5lkIQyUTsWX5NyuHiPivvOMPtkLmoLoi1X/pub
+---
+
+### Wrapping up
+
+In your base group's Slack channel:
+
+- What is one thing you learned today?
+- What is something you want to learn more about? 
+- Share your feelings in GIF form!
